@@ -35,7 +35,7 @@ const USER={id:async()=>U.uid,me:async()=>({id:U.uid,name:U.displayName||mail().
   canEdit:()=>ADM,isOwner:()=>ADM,can:n=>true,profiles:async ids=>{const o={};(ids||[]).forEach(i=>{o[i]={name:''}});return o}};
 const DL={save:async({filename,data})=>{const b=data instanceof Blob?data:new Blob([data]);const u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=filename||'documento';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),30000)}};
 
-let pronto;const PRONTO=new Promise(r=>pronto=r);
+let pronto;const PRONTO=new Promise(r=>pronto=r);window.__welT=1;/* adia o aviso de boas-vindas até ao login */
 window.claude={use:async n=>{await PRONTO;if(n==='db')return DB;if(n==='user')return USER;if(n==='downloads')return DL;return null}};
 
 /* ---- ecrã de entrada ---- */
@@ -94,5 +94,6 @@ auth.onAuthStateChanged(async u=>{
   const l=$('#rafcLogin');if(l)l.remove();
   if(!$('#rafcSair')){const b=document.createElement('button');b.id='rafcSair';b.textContent='Sair';b.title='Terminar sessão ('+mail()+')';b.onclick=()=>auth.signOut();document.body.appendChild(b)}
   pronto();
+  const w=document.getElementById('welc');if(w)w.remove();setTimeout(()=>{window.__welT=undefined},500);
 });
 })();
