@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-PT"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="firebase-config.js?v=202611131312"></script><script src="rafc.js?v=202611131312"></script><meta name="theme-color" content="#0b5a33"><link rel="manifest" href="manifest.webmanifest">
+<!doctype html><html lang="pt-PT"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="firebase-config.js?v=202611131323"></script><script src="rafc.js?v=202611131323"></script><meta name="theme-color" content="#0b5a33"><link rel="manifest" href="manifest.webmanifest">
 <title>Academia Rio Ave FC 360°</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1138,7 +1138,7 @@ toastEl.addEventListener('click',()=>{toastEl.hidden=true});
 async function wr(fn){
   if(!db){toast('Sem ligação à base de dados.');return false}
   if(!canWrite){toast('A tua conta não pode alterar os dados.');return false}
-  try{await fn();return true}catch(e){toast('Não foi possível guardar ('+((e&&e.code)||'erro')+').');return false}
+  try{await fn();return true}catch(e){toast(''+(/invalid_argument|not_granted|permission|denied/i.test((e&&e.code)||'')?'Não foi possível guardar: a sua conta só tem acesso de leitura ou comentário. Peça ao Jorge Freitas acesso para editar.':'Não foi possível guardar ('+((e&&e.code)||'erro')+').'));return false}
 }
 function armDel(btn,fn){
   if(btn.dataset.armed){fn();return}
@@ -2942,7 +2942,7 @@ const isApr=()=>!!(window.__uid&&window.__apvId&&window.__uid===window.__apvId);
 const aprOf=id=>(window.__aprs||[]).find(x=>x.id===id);
 const aprValid=a=>!!(a&&a.respPor&&a.respPor===window.__apvId);
 const hojeISO=()=>{const n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0')};
-async function wrA(fn,okMsg){if(!db){toast('Sem ligação à base de dados.');return false}try{await fn();if(okMsg)toast(okMsg);return true}catch(e){toast('Não foi possível guardar ('+((e&&e.code)||'erro')+').');return false}}
+async function wrA(fn,okMsg){if(!db){toast('Sem ligação à base de dados.');return false}try{await fn();if(okMsg)toast(okMsg);return true}catch(e){toast(''+(/invalid_argument|not_granted|permission|denied/i.test((e&&e.code)||'')?'Não foi possível guardar: a sua conta só tem acesso de leitura ou comentário. Peça ao Jorge Freitas acesso para editar.':'Não foi possível guardar ('+((e&&e.code)||'erro')+').'));return false}}
 function aprHtml(r){
   const a=aprOf(r.id);let o='';
   if(a){const tag=a.estado==='aprovado'?(aprValid(a)?'ok':'warn'):a.estado==='pendente'?'amber':'warn';
