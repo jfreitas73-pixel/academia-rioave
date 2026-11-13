@@ -1,4 +1,39 @@
-<!doctype html><html lang="pt-PT"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="firebase-config.js?v=202611131511"></script><script src="rafc.js?v=202611131511"></script><meta name="theme-color" content="#0b5a33"><link rel="manifest" href="manifest.webmanifest">
+<!doctype html><html lang="pt-PT"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+/* ficha do atleta · barra de ações e modo de edição */
+.fb-bar{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 12px;margin:-2px 0 6px;border-radius:12px;background:var(--surface2);border:1px solid var(--line)}
+.fb-bar .btn{display:inline-flex;align-items:center;gap:6px}
+.fb-bar .fb-del{margin-left:auto;color:#b42318;border-color:rgba(180,35,24,.35);background:transparent}
+.fb-bar .fb-del:hover{background:rgba(180,35,24,.08);border-color:#b42318}
+.fb-last{flex-basis:100%;font-size:12px;color:var(--muted)}
+.fb-on{position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:20;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-color:var(--gold,#B8901F);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.fb-bot{position:static;margin-top:10px;box-shadow:none}
+.fb-st{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px;margin-right:auto}
+.fb-dot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none}
+.fb-dirty .fb-dot{background:#d97706;box-shadow:0 0 0 4px rgba(217,119,6,.18)}
+.fb-kb{flex-basis:100%;font-size:11.5px;color:var(--muted)}
+@media(max-width:640px){.fb-kb{display:none}.fb-on .btn{flex:1 1 auto;justify-content:center}.fb-st{flex-basis:100%}}
+.fi-ed{outline:2px solid var(--gold,#B8901F);outline-offset:2px;border-radius:12px}
+.fi-ed .fb input:not([type=checkbox]):not([type=radio]),.fi-ed .fb select,.fi-ed .fb textarea{background:var(--surface);border-color:color-mix(in srgb,var(--gold,#B8901F) 45%,var(--line))}
+.fe-id{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:4px 16px}
+.fe-id input,.fe-id select{width:100%}
+#cfDlg{position:fixed;inset:0;z-index:100002;background:rgba(6,20,14,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+#cfDlg .cf-box{background:var(--surface);color:var(--fg);border-radius:18px;max-width:420px;width:100%;padding:22px;box-shadow:0 30px 70px rgba(0,0,0,.35);text-align:center}
+#cfDlg .cf-ic{width:44px;height:44px;margin:0 auto 10px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(217,119,6,.14);color:#b45309;font-weight:800;font-size:20px}
+#cfDlg .cf-ic.cf-bad{background:rgba(180,35,24,.12);color:#b42318}
+#cfDlg .cf-ic svg{width:22px;height:22px}
+#cfDlg h3{margin:0 0 6px;font-size:18px}
+#cfDlg p{margin:0 0 18px;color:var(--muted);line-height:1.45}
+#cfDlg .cf-bt{display:flex;gap:10px}
+#cfDlg .cf-bt .btn{flex:1;justify-content:center;padding:11px}
+#cfDlg .cf-dg{background:#b42318;border-color:#b42318;color:#fff}
+#cfDlg .cf-dg:hover{background:#912018}
+#snk{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:100003;display:flex;align-items:center;gap:16px;padding:12px 14px 12px 18px;border-radius:14px;background:#10241a;color:#fff;box-shadow:0 16px 40px rgba(0,0,0,.35);overflow:hidden;max-width:calc(100vw - 32px)}
+#snk button{background:transparent;border:0;color:#E3C25B;font-weight:700;font-size:14px;cursor:pointer;padding:6px 8px;border-radius:8px}
+#snk button:hover{background:rgba(255,255,255,.08)}
+#snk i{position:absolute;left:0;bottom:0;height:3px;background:#E3C25B;width:100%;animation:snkT linear forwards}
+@keyframes snkT{from{width:100%}to{width:0}}
+@media(min-width:900px){#snk{bottom:24px}}
+</style></head><body><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="firebase-config.js?v=202611131624"></script><script src="rafc.js?v=202611131624"></script><meta name="theme-color" content="#0b5a33"><link rel="manifest" href="manifest.webmanifest">
 <title>Academia Rio Ave FC 360°</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1600,14 +1635,20 @@ function renderEq(){
   const rotOf=a=>{let out=null;rots.forEach(r=>(r.atletas||[]).forEach(x=>{if(matchName(x.nome,a.nome)&&x.esc===esc)out=r}));return out};
   const semEE=all.filter(a=>!a.eeTel&&!a.tel).length,semMor=all.filter(a=>!a.morada).length;
   let h='<div class="kp"><div><b>'+all.length+'</b><span>Atletas</span></div><div><b>'+semEE+'</b><span>Sem contacto</span></div><div><b>'+semMor+'</b><span>Sem morada</span></div>'+(eqVis(st.eq).length?'<div><b>'+eqVis(st.eq).length+'</b><span>De outros escalões</span></div>':'')+'</div>'+(eqVis(st.eq).length?'<p class="small muted">Também neste plantel: '+eqVis(st.eq).map(a=>h2(a.camisola||a.nome)+' ('+h2(EQN[a._vis])+')').join(' · ')+'. Aparecem nos PDFs e no campo, mas a ficha está no escalão de origem.</p>':'');
-  const fichaFn=(a,i)=>{
-    const open=st.fOpen[a.id]?' open':'';
+  const fichaFn=(a0,i)=>{
+    const ed=fEdMine(a0.id),a=ed?fDraft(a0):a0;
+    const open=(st.fOpen[a0.id]||ed)?' open':'';
     const dc=a.ced&&a.cedFim?diasAte(a.cedFim):null,tags=(a.ced?'<span class="tag w">Cedido'+(a.cedClube?' a '+h2(a.cedClube):'')+(dc!=null?(dc<0?' · regresso em atraso':dc<=30?' · regressa em '+dc+' d':''):'')+'</span>':'')+(a.pos?'<span class="tag">'+h2(a.pos)+'</span>':'')+(a.altura?'<span class="tag">'+h2(a.altura)+' cm</span>':'')+(!a.eeTel&&!a.tel?'<span class="tag w">sem contacto</span>':'')+finTag(a);
-    const ro=!canWrite?' disabled':'',dl=(t,v)=>'<dl><dt>'+t+'</dt><dd>'+(v?h2(v):'—')+'</dd></dl>';
-    return '<details class="fi" data-fid="'+h2(a.id)+'"'+open+'><summary><span class="num muted">'+(a.num||'')+'</span><span class="nm">'+h2(a.nome)+'</span>'+tags+'<span class="muted small num">'+(anos(a.nasc)?anos(a.nasc)+' anos':'')+'</span></summary><div class="fb">'+atl360(a,st.eq,find(resid,a)[0],rotOf(a))+
-      dl('Data de nascimento',fmtDate(a.nasc))+dl('Nome da camisola',a.camisola)+dl('Nacionalidade',a.nacionalidade)+dl('Pé dominante',a.pe)+dl('Nº de licença',a.lic)+dl('Inscrição',fmtDate(a.insc))+dl('BI / Cartão de Cidadão',a.bi)+dl('NIF',a.nif)+dl('Nº de utente (SNS)',a.sns)+
-      dl('Morada',[a.morada,[a.cp,a.cidade].filter(Boolean).join(' ')].filter(Boolean).join(', '))+dl('Telemóvel do atleta',a.tel)+dl('Email do atleta',a.email)+
-      dl('CC do atleta',a.bi)+parHtml(a,ro)+
+    const ro=ed?'':' disabled',dl=(t,v)=>'<dl><dt>'+t+'</dt><dd>'+(v?h2(v):'—')+'</dd></dl>';
+    const IN=(f,t,ty,ph,ex)=>ed?'<dl'+(ex||'')+'><dt>'+t+'</dt><dd><input type="'+(ty||'text')+'" data-ef="'+h2(a.id)+'|'+f+'" value="'+h2(a[f]||'')+'"'+(ph?' placeholder="'+ph+'"':'')+'></dd></dl>':'';
+    return '<details class="fi'+(ed?' fi-ed':'')+'" data-fid="'+h2(a.id)+'"'+open+'><summary><span class="num muted">'+(a.num||'')+'</span><span class="nm">'+h2(a.nome)+'</span>'+tags+'<span class="muted small num">'+(anos(a.nasc)?anos(a.nasc)+' anos':'')+'</span></summary><div class="fb">'+fBar(a0,ed)+(ed?'':atl360(a,st.eq,find(resid,a)[0],rotOf(a)))+
+      (ed?'<fieldset class="esc fe-id" style="grid-column:1/-1"><legend>Identificação</legend>'+IN('nome','Nome completo *','text','','')+IN('nasc','Data de nascimento','date')+IN('camisola','Nome da camisola')+IN('nacionalidade','Nacionalidade','text','Portuguesa')+
+        '<dl><dt>Pé dominante</dt><dd><select data-ef="'+h2(a.id)+'|pe">'+opts(['Direito','Esquerdo','Ambidestro'],a.pe,'—')+'</select></dd></dl>'+IN('lic','Nº de licença FPF')+IN('insc','Data de inscrição','date')+
+        IN('bi','Cartão de Cidadão / BI')+IN('nif','NIF','text','9 dígitos')+IN('sns','Nº de utente (SNS)')+'</fieldset>'+
+        '<fieldset class="esc fe-id" style="grid-column:1/-1"><legend>Morada e contactos</legend>'+IN('morada','Morada','text','',' style="grid-column:1/-1"')+IN('cp','Código postal','text','0000-000')+IN('cidade','Localidade')+IN('tel','Telemóvel do atleta','tel')+IN('email','Email do atleta','email')+'</fieldset>'
+       :dl('Data de nascimento',fmtDate(a.nasc))+dl('Nome da camisola',a.camisola)+dl('Nacionalidade',a.nacionalidade)+dl('Pé dominante',a.pe)+dl('Nº de licença',a.lic)+dl('Inscrição',fmtDate(a.insc))+dl('BI / Cartão de Cidadão',a.bi)+dl('NIF',a.nif)+dl('Nº de utente (SNS)',a.sns)+
+      dl('Morada',[a.morada,[a.cp,a.cidade].filter(Boolean).join(' ')].filter(Boolean).join(', '))+dl('Telemóvel do atleta',a.tel)+dl('Email do atleta',a.email))+
+      parHtml(a,ro)+
       '<dl><dt>Posição preferencial</dt><dd><select data-ef="'+h2(a.id)+'|pos"'+ro+'>'+posOpts(a.pos)+'</select></dd></dl>'+
       '<dl><dt>Posição alternativa</dt><dd><select data-ef="'+h2(a.id)+'|pos2"'+ro+'>'+posOpts(a.pos2)+'</select></dd></dl>'+
       '<dl><dt>Altura (cm)</dt><dd><input type="number" min="100" max="230" data-ef="'+h2(a.id)+'|altura" value="'+h2(a.altura||'')+'"'+ro+'></dd></dl>'+
@@ -1631,7 +1672,7 @@ function renderEq(){
       '<dl style="grid-column:1/-1"><dt>Notas da escola</dt><dd><textarea rows="2" data-ef="'+h2(a.id)+'|notaEsc"'+ro+'>'+h2(a.notaEsc||'')+'</textarea></dd></dl></fieldset>'+
       '<div style="grid-column:1/-1">'+finHtml(a)+cliHtml(a)+'</div>'+
       '<dl style="grid-column:1/-1"><dt>Notas</dt><dd><textarea rows="2" data-ef="'+h2(a.id)+'|nota"'+ro+'>'+h2(a.nota||'')+'</textarea></dd></dl>'+
-      '<div class="row"><button class="btn sm primary" data-atlpdf="'+h2(a.id)+'">Imprimir ficha…</button></div>'+(canWrite?'<div><button class="btn sm" data-del-atleta="'+h2(a.id)+'">Remover</button></div>':'')+
+      (ed?fBar(a0,ed,true):'')+
       '</div></details>';
   };
   h+=list.length?list.map(fichaFn).join(''):'<p class="muted">Nenhum atleta encontrado.</p>';
@@ -1675,7 +1716,7 @@ async function parSugerir(id){const f=findAth(id),a=f.arr.find(x=>x.id===id);if(
   if(a.eeEmail){if(na.paiNome&&!na.maeNome)na.paiEmail=a.eeEmail;else if(na.maeNome&&!na.paiNome)na.maeEmail=a.eeEmail;else if(na.outroNome)na.outroEmail=a.eeEmail}
   if(a.eeCC){if(na.paiNome&&!na.maeNome)na.paiCC=a.eeCC;else if(na.maeNome&&!na.paiNome)na.maeCC=a.eeCC}
   st.fOpen[id]=true;if(await saveEq(f.t,f.arr.map(x=>x.id===id?na:x)))toast('Separado. Confirme quem é o pai e quem é a mãe e escolha o encarregado de educação.')}
-document.addEventListener('change',e=>{const t=e.target.closest&&e.target.closest('[data-par]');if(!t)return;const q=t.dataset.par.split('|');parEdit(q[0],q[1],t.value.trim())});
+document.addEventListener('change',e=>{const t=e.target.closest&&e.target.closest('[data-par]');if(!t)return;const q=t.dataset.par.split('|');if(fEdMine(q[0]))return fEdSet(q[0],'par:'+q[1],t.value.trim());parEdit(q[0],q[1],t.value.trim())});
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-parsug]');if(b){e.preventDefault();parSugerir(b.dataset.parsug)}});
 async function editAth(id,field,val){
   const f=findAth(id),a=f.arr.find(x=>x.id===id);if(!a)return;
@@ -1697,7 +1738,7 @@ async function editAth(id,field,val){
   const na=f.arr.map(x=>x.id===id?Object.assign({},x,{[field]:val}):x);
   return saveEq(f.t,na);
 }
-document.addEventListener('change',e=>{const t=e.target,k=t.dataset&&t.dataset.tb;if(!k)return;const id=k.split('|')[0],w=t.closest('[data-tbw]'),arr=[...w.querySelectorAll('input[data-tb]')].filter(x=>x.checked).map(x=>x.dataset.tb.split('|')[1]);editAth(id,'tambem',arr)});
+document.addEventListener('change',e=>{const t=e.target,k=t.dataset&&t.dataset.tb;if(!k)return;const id=k.split('|')[0],w=t.closest('[data-tbw]'),arr=[...w.querySelectorAll('input[data-tb]')].filter(x=>x.checked).map(x=>x.dataset.tb.split('|')[1]);if(fEdMine(id))return fEdSet(id,'tambem',arr);editAth(id,'tambem',arr)});
 async function addAtleta(){
   const nome=$('#eNome').value.trim();if(!nome){toast('Escreve o nome do atleta.');return}
   const t=$('#eEq').value,d=L('eqp').find(x=>x.id===t),arr=(d&&d.atletas)||[],v=i=>$(i).value.trim();
@@ -2213,7 +2254,7 @@ document.addEventListener('change',async e=>{
   if(t.dataset.tec){const q=t.dataset.tec.split('|');return wr(()=>db.doc('tecnicos/'+q[0]).update({[q[1]]:q[1]==='valor'?(t.value===''?'':+t.value):t.value.trim()}))}
   if(t.id==='tecCat'){st.tecCat=t.value;return renderTec('tec')}
   if(t.id==='stfCat'){st.stfCat=t.value;return renderTec('stf')}
-  if(t.dataset.ef){const q=t.dataset.ef.split('|');return editAth(q[0],q[1],(q[1]==='num'||q[1]==='altura'||(q[1]==='turno'&&t.value!=='online'))?(t.value===''?'':+t.value):t.value)}
+  if(t.dataset.ef){const q=t.dataset.ef.split('|');if(fEdMine(q[0]))return fEdSet(q[0],q[1],(q[1]==='num'||q[1]==='altura'||(q[1]==='turno'&&t.value!=='online'))?(t.value===''?'':+t.value):t.value);return editAth(q[0],q[1],(q[1]==='num'||q[1]==='altura'||(q[1]==='turno'&&t.value!=='online'))?(t.value===''?'':+t.value):t.value)}
   if(t.id==='compSel'){st.comp=t.value;return renderComp()}
   if(t.dataset.cj){
     const q=t.dataset.cj.split('|'),c=L('cmp').find(x=>x.id===q[0]);if(!c)return;
@@ -3790,6 +3831,75 @@ function saiMsgOv(p){const m=saiMsg(p),old=document.getElementById('convOv');if(
     const c=e.target.closest('[data-mcp]');if(c){const el=ov.querySelector('[data-mk="'+c.dataset.mcp+'"]');let ok=false;try{await navigator.clipboard.writeText(el.value);ok=true}catch(x){}if(!ok){el.focus();el.select()}c.textContent=ok?'Copiado ✓':'Selecione e copie';return}
     if(e.target.closest('[data-mpdf]')){try{libVer('sai',{blob:await saiPdf(p),file:saiFile(p)})}catch(x){toast('Não consegui gerar o PDF.')}}});
 }
+
+/* ---------- Ficha do atleta: modo de edição (rascunho · guardar · cancelar · eliminar · desfazer) ---------- */
+st.fEd=null;
+const fEdMine=id=>!!(canWrite&&st.fEd&&st.fEd.id===id);
+const fEdN=()=>st.fEd?Object.keys(st.fEd.d).length:0;
+function fDraft(a){const d=(st.fEd&&st.fEd.d)||{},na=Object.assign({},a),par={};
+  Object.keys(d).forEach(k=>{const v=d[k],mh=/^he(\d)([if])$/.exec(k);
+    if(mh){const he=[0,1,2,3,4].map(i=>((na.horEsc||[])[i]||['','']).slice());he[+mh[1]][mh[2]==='i'?0:1]=v;na.horEsc=he}
+    else if(k.indexOf('par:')===0)par[k.slice(4)]=v;else if(k!=='eq')na[k]=v});
+  if(Object.keys(par).length){Object.assign(na,par);try{Object.assign(na,parDeriv(na))}catch(e){}}
+  return na}
+function fEdSet(id,k,v){if(!fEdMine(id))return;const a=(findAth(id).arr||[]).find(x=>x.id===id)||{};
+  const orig=k.indexOf('par:')===0?a[k.slice(4)]:/^he\d[if]$/.test(k)?(((a.horEsc||[])[+k[2]]||['',''])[k[3]==='i'?0:1]):k==='eq'?findAth(id).t:a[k];
+  const same=Array.isArray(v)?JSON.stringify(v)===JSON.stringify(orig||[]):String(v==null?'':v)===String(orig==null?'':orig);
+  if(same)delete st.fEd.d[k];else st.fEd.d[k]=v;fBarSync();if(k==='ced')renderEq()}
+function fBar(a,ed,baixo){const quem=a.edPor?'<span class="fb-last">Última alteração: '+h2(a.edPor)+(a.edEm?' · '+h2(triFm(String(a.edEm).slice(0,10))):'')+'</span>':'';
+  if(!ed)return '<div class="fb-bar">'+(canWrite?'<button class="btn sm primary" data-fed="'+h2(a.id)+'">'+ICF.ed+'Editar ficha</button>':'')+'<button class="btn sm" data-atlpdf="'+h2(a.id)+'">'+ICF.pr+'Imprimir ficha…</button>'+(canWrite?'<button class="btn sm fb-del" data-fdel="'+h2(a.id)+'">'+ICF.del+'Eliminar</button>':'')+quem+'</div>';
+  const n=fEdN();return '<div class="fb-bar fb-on'+(baixo?' fb-bot':'')+'" data-fbar><span class="fb-st"><span class="fb-dot"></span><span data-fbn>'+(n?n+(n===1?' alteração por guardar':' alterações por guardar'):'A editar · sem alterações')+'</span></span>'+
+    '<button class="btn sm primary" data-fsave="'+h2(a.id)+'"'+(n?'':' disabled')+'>'+ICF.ok+'Guardar alterações</button><button class="btn sm" data-fcancel="'+h2(a.id)+'">Cancelar</button>'+(baixo?'':'<button class="btn sm fb-del" data-fdel="'+h2(a.id)+'">'+ICF.del+'Eliminar atleta</button>')+'<span class="fb-kb">⌘S guardar · Esc cancelar</span></div>'}
+const ICF={ed:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+  pr:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>',
+  del:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>',
+  ok:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>'};
+function fBarSync(){const n=fEdN();$$('[data-fbar] [data-fbn]').forEach(x=>{x.textContent=n?n+(n===1?' alteração por guardar':' alterações por guardar'):'A editar · sem alterações'});$$('[data-fbar] [data-fsave]').forEach(b=>{b.disabled=!n});$$('[data-fbar]').forEach(b=>b.classList.toggle('fb-dirty',!!n))}
+function dlgConfirma(o){return new Promise(res=>{const old=document.getElementById('cfDlg');if(old)old.remove();const ov=document.createElement('div');ov.id='cfDlg';
+  ov.innerHTML='<div class="cf-box" role="alertdialog" aria-modal="true" aria-labelledby="cfT"><div class="cf-ic'+(o.perigo?' cf-bad':'')+'">'+(o.perigo?ICF.del:'!')+'</div><h3 id="cfT">'+h2(o.tit)+'</h3><p>'+o.txt+'</p><div class="cf-bt"><button class="btn" data-cf="0">'+h2(o.nao||'Cancelar')+'</button><button class="btn '+(o.perigo?'cf-dg':'primary')+'" data-cf="1">'+h2(o.ok||'Confirmar')+'</button></div></div>';
+  document.body.appendChild(ov);const fim=v=>{ov.remove();document.removeEventListener('keydown',kd,true);res(v)};const kd=e=>{if(e.key==='Escape'){e.stopPropagation();fim(false)}};document.addEventListener('keydown',kd,true);
+  ov.addEventListener('click',e=>{const b=e.target.closest('[data-cf]');if(b)fim(b.dataset.cf==='1');else if(e.target===ov)fim(false)});setTimeout(()=>{const b=ov.querySelector('[data-cf="'+(o.perigo?'0':'1')+'"]');if(b)b.focus()},30)})}
+function snack(txt,acao,fn,ms){const old=document.getElementById('snk');if(old)old.remove();const s=document.createElement('div');s.id='snk';s.setAttribute('role','status');
+  s.innerHTML='<span>'+h2(txt)+'</span>'+(acao?'<button type="button">'+h2(acao)+'</button>':'')+'<i style="animation-duration:'+(ms||10000)+'ms"></i>';document.body.appendChild(s);
+  const t=setTimeout(()=>s.remove(),ms||10000);if(acao)s.querySelector('button').onclick=()=>{clearTimeout(t);s.remove();fn()}}
+function fValida(a){const e=[];if(!String(a.nome||'').trim())e.push('o nome é obrigatório');
+  if(a.email&&!/^\S+@\S+\.\S+$/.test(a.email))e.push('o email do atleta não é válido');
+  if(a.nif&&!/^\d{9}$/.test(String(a.nif).replace(/\s/g,'')))e.push('o NIF tem de ter 9 dígitos');
+  else if(a.nif){const n=String(a.nif).replace(/\s/g,'');let sm=0;for(let i=0;i<8;i++)sm+=+n[i]*(9-i);const c=11-sm%11;if((c>=10?0:c)!==+n[8])e.push('o NIF não é válido (dígito de controlo)')}
+  if(a.cp&&!/^\d{4}-\d{3}$/.test(a.cp))e.push('o código postal deve ser 0000-000');
+  if(a.nasc&&a.nasc>hojeISO())e.push('a data de nascimento está no futuro');
+  ['eeEmail','paiEmail','maeEmail','outroEmail'].forEach(k=>{if(a[k]&&!/^\S+@\S+\.\S+$/.test(a[k]))e.push('um email do encarregado de educação não é válido')});
+  return Array.from(new Set(e))}
+async function fGuardar(id){if(!fEdMine(id))return;const f=findAth(id),a=f.arr.find(x=>x.id===id);if(!a){st.fEd=null;return renderEq()}
+  if(!fEdN()){st.fEd=null;return renderEq()}
+  const d=Object.assign({},st.fEd.d),na=fDraft(a);['nome','camisola','morada','cidade','email','nif','bi','sns','lic'].forEach(k=>{if(typeof na[k]==='string')na[k]=na[k].trim()});
+  const er=fValida(na);if(er.length){toast('Não foi possível guardar: '+er.join('; ')+'.','err');return}
+  na.edEm=new Date().toISOString();na.edPor=window.__uname||'';
+  $$('[data-fsave]').forEach(b=>{b.disabled=true;b.textContent='A guardar…'});
+  const ok=await saveEq(f.t,f.arr.map(x=>x.id===id?na:x));if(!ok){fBarSync();return}
+  st.fEd=null;st.fOpen[id]=true;
+  if(d.eq&&d.eq!==f.t){await editAth(id,'eq',d.eq)}else toast('Ficha de '+na.nome+' guardada.','ok');
+  renderEq()}
+async function fCancelar(id,forcar){if(!st.fEd)return true;if(fEdN()&&!forcar){const ok=await dlgConfirma({tit:'Descartar as alterações?',txt:'Fez '+fEdN()+(fEdN()===1?' alteração':' alterações')+' nesta ficha que ainda não foram guardadas.',ok:'Descartar',nao:'Continuar a editar',perigo:true});if(!ok)return false}
+  st.fEd=null;renderEq();return true}
+async function fEliminar(id){const f=findAth(id),a=f.arr.find(x=>x.id===id);if(!a)return;
+  const ok=await dlgConfirma({tit:'Eliminar '+a.nome+'?',txt:'A ficha sai do plantel de <b>'+h2(EQN[f.t]||'')+'</b>'+(canClin&&cliOf(id)?', juntamente com a ficha clínica':'')+'. Pode desfazer durante 10 segundos.',ok:'Eliminar atleta',perigo:true});if(!ok)return;
+  const c0=canClin&&cliOf(id);const okk=await saveEq(f.t,f.arr.filter(x=>x.id!==id));if(!okk)return;
+  if(c0){const so=D.cli.find(x=>x.id===f.t),A=Object.assign({},so&&so.atletas);delete A[id];await wr(()=>db.doc('clinica/'+f.t).set({escalao:EQN[f.t],atletas:A}))}
+  if(st.fEd&&st.fEd.id===id)st.fEd=null;delete st.fOpen[id];renderEq();
+  snack(a.nome+' foi eliminado.','Desfazer',async()=>{const g=findAth(id);if(g.arr.some(x=>x.id===id))return;
+    if(await saveEq(g.t,g.arr.concat([a]))){if(c0){const so=D.cli.find(x=>x.id===g.t);await wr(()=>db.doc('clinica/'+g.t).set({escalao:EQN[g.t],atletas:Object.assign({},so&&so.atletas,{[id]:c0})}))}st.fOpen[id]=true;toast('Ficha de '+a.nome+' reposta.','ok');renderEq()}})}
+document.addEventListener('click',async e=>{const b=e.target.closest&&e.target.closest('[data-fed],[data-fsave],[data-fcancel],[data-fdel]');if(!b)return;e.preventDefault();e.stopPropagation();
+  if(b.dataset.fed){if(st.fEd&&st.fEd.id!==b.dataset.fed&&!(await fCancelar(st.fEd.id)))return;st.fEd={id:b.dataset.fed,d:{}};st.fOpen[b.dataset.fed]=true;renderEq();
+    setTimeout(()=>{const x=document.querySelector('.fi-ed [data-ef$="|nome"]');if(x){x.focus();x.closest('.fi').scrollIntoView({behavior:'smooth',block:'start'})}},40);return}
+  if(b.dataset.fsave)return fGuardar(b.dataset.fsave);
+  if(b.dataset.fcancel)return fCancelar(b.dataset.fcancel);
+  if(b.dataset.fdel)return fEliminar(b.dataset.fdel)},true);
+document.addEventListener('input',e=>{const t=e.target;if(!t.dataset)return;const k=t.dataset.ef||t.dataset.par;if(!k||!/^(text|email|tel|number|date|search)$|textarea/i.test(t.type||t.tagName))return;const q=k.split('|');if(!fEdMine(q[0]))return;
+  const v=t.dataset.ef?((q[1]==='num'||q[1]==='altura')?(t.value===''?'':+t.value):t.value):t.value.trim();fEdSet(q[0],t.dataset.ef?q[1]:'par:'+q[1],v)});
+document.addEventListener('keydown',e=>{if(!st.fEd)return;if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='s'){e.preventDefault();fGuardar(st.fEd.id)}else if(e.key==='Escape'&&!document.getElementById('cfDlg')){e.preventDefault();fCancelar(st.fEd.id)}});
+window.addEventListener('beforeunload',e=>{if(st.fEd&&fEdN()){e.preventDefault();e.returnValue=''}});
+document.addEventListener('toggle',e=>{const d=e.target;if(d&&d.classList&&d.classList.contains('fi')&&!d.open&&st.fEd&&st.fEd.id===d.dataset.fid){d.open=true;fCancelar(d.dataset.fid)}},true);
 function renderHoje(){
   const box=$('#hojeBox');if(!box)return;
   {const dm=pfMine();if(dm&&dm.nada){box.innerHTML='<div class="sec" style="padding:20px;text-align:center"><b style="font-size:17px">Bem-vindo à Academia Rio Ave FC 360°</b><p class="muted" style="margin:8px 0 0">'+(window.__perfis===undefined?'A verificar o seu perfil…':'Ainda não tem um perfil atribuído. Assim que o diretor da academia lhe der acesso, as suas áreas aparecem aqui.')+'</p></div>';return}}
