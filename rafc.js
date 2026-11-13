@@ -29,7 +29,7 @@ const wC=c=>Object.assign(wQ(c),{id:c.id,add:async v=>{const r=await c.add(enc(v
 const DB={collection:p=>wC(fs.collection(p)),doc:p=>wD(fs.doc(p))};
 
 /* ---- utilizador ---- */
-let U=null,ADM=false;
+const DONOS=['jfreitas73@gmail.com'];let U=null,ADM=false;
 const mail=()=>String((U&&U.email)||'').toLowerCase();
 const USER={id:async()=>U.uid,me:async()=>({id:U.uid,name:U.displayName||mail().split('@')[0],email:mail()}),
   canEdit:()=>ADM,isOwner:()=>ADM,can:n=>true,profiles:async ids=>{const o={};(ids||[]).forEach(i=>{o[i]={name:''}});return o}};
@@ -51,7 +51,7 @@ const CSS=`#rafcLogin{position:fixed;inset:0;z-index:100000;background:linear-gr
 #rafcLogin .ms{font-size:14px;min-height:1em;color:#9a3412}
 #rafcLogin .ok{color:#0b5a33}
 #rafcLogin .ou{display:flex;align-items:center;gap:10px;color:#8a978f;font-size:12px}#rafcLogin .ou:before,#rafcLogin .ou:after{content:"";flex:1;height:1px;background:#dde5e0}
-#rafcSair{position:fixed;right:12px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:9000;font:600 12px system-ui;padding:7px 11px;border-radius:999px;border:1px solid rgba(0,0,0,.15);background:#fff;color:#14231b;box-shadow:0 4px 14px rgba(0,0,0,.15);cursor:pointer}
+#rafcSair{position:fixed!important;left:auto!important;top:auto!important;right:12px!important;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:9000;font:600 12px system-ui;padding:7px 11px;border-radius:999px;border:1px solid rgba(0,0,0,.15);background:#fff;color:#14231b;box-shadow:0 4px 14px rgba(0,0,0,.15);cursor:pointer}
 @media(min-width:900px){#rafcSair{bottom:16px}}`;
 let modo='entrar';
 function ecra(msg,okMsg){let el=$('#rafcLogin');if(!el){const st=document.createElement('style');st.textContent=CSS;document.head.appendChild(st);el=document.createElement('div');el.id='rafcLogin';document.body.appendChild(el)}
@@ -90,7 +90,7 @@ auth.onAuthStateChanged(async u=>{
   const google=(u.providerData||[]).some(p=>p&&p.providerId==='google.com');
   if(!u.emailVerified&&!google){verificar(u);return}
   U=u;entrou=true;
-  try{ADM=(await fs.doc('admins/'+mail()).get()).exists}catch(e){ADM=false}
+  ADM=DONOS.includes(mail());if(!ADM){try{ADM=(await fs.doc('admins/'+mail()).get()).exists}catch(e){ADM=false}}
   const l=$('#rafcLogin');if(l)l.remove();
   if(!$('#rafcSair')){const b=document.createElement('button');b.id='rafcSair';b.textContent='Sair';b.title='Terminar sessão ('+mail()+')';b.onclick=()=>auth.signOut();document.body.appendChild(b)}
   pronto();
