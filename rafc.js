@@ -51,10 +51,26 @@ const CSS=`#rafcLogin{position:fixed;inset:0;z-index:100000;background:linear-gr
 #rafcLogin .ms{font-size:14px;min-height:1em;color:#9a3412}
 #rafcLogin .ok{color:#0b5a33}
 #rafcLogin .ou{display:flex;align-items:center;gap:10px;color:#8a978f;font-size:12px}#rafcLogin .ou:before,#rafcLogin .ou:after{content:"";flex:1;height:1px;background:#dde5e0}
-#rafcSairBox{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
-#rafcSair{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:transparent;color:#fca5a5;font:600 .95rem/1.2 inherit;font-family:inherit;padding:9px 12px;border-radius:10px;cursor:pointer}
-#rafcSair:hover{background:rgba(255,255,255,.08)}
-#rafcSairBox .rafcEu{font-size:11.5px;opacity:.55;padding:2px 12px 4px 40px;color:inherit;overflow-wrap:anywhere}`;
+.rc-card{margin:16px 6px 6px;padding:14px;border-radius:16px;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid rgba(227,194,91,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);color:#eef5f0}
+.rc-top{display:flex;align-items:center;gap:12px;min-width:0}
+.rc-av{width:42px;height:42px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font:700 1.05rem/1 'Barlow Condensed','Arial Narrow',Arial,sans-serif;letter-spacing:.04em;color:#12281f;background:linear-gradient(135deg,#F3DE98,#E3C25B);box-shadow:0 0 0 2px rgba(255,255,255,.25),0 4px 10px rgba(0,0,0,.3)}
+.rc-id{min-width:0;display:flex;flex-direction:column;gap:2px}
+.rc-nm{font:700 1rem/1.15 'Barlow',system-ui,sans-serif;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-rl{font:600 10.5px/1.2 'Barlow',system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#E3C25B}
+.rc-em{font:400 12px/1.25 'Barlow',system-ui,sans-serif;color:rgba(238,245,240,.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-out{margin-top:12px;width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.18);color:#fff;font:600 .92rem/1 'Barlow',system-ui,sans-serif;letter-spacing:.02em;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.rc-out:hover,.rc-out:focus-visible{background:rgba(220,38,38,.18);border-color:rgba(248,113,113,.55);color:#fecaca;outline:none}
+.rc-out svg{flex:none;opacity:.9}
+.rc-cf{margin-top:12px;padding:12px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(248,113,113,.35)}
+.rc-cf p{margin:0 0 10px;font:500 .9rem/1.35 'Barlow',system-ui,sans-serif;color:#fff}
+.rc-cf .rc-bt{display:flex;gap:8px}
+.rc-cf button{flex:1;padding:9px 10px;border-radius:10px;font:600 .88rem/1 'Barlow',system-ui,sans-serif;cursor:pointer;border:1px solid rgba(255,255,255,.18);background:transparent;color:#fff}
+.rc-cf button.rc-yes{background:#dc2626;border-color:#dc2626}
+.rc-cf button.rc-yes:hover{background:#b91c1c}
+#hAv.rc-click{cursor:pointer}
+#rcPop{position:fixed;z-index:100001;width:min(320px,calc(100vw - 32px));background:linear-gradient(170deg,#0F3527,#071A13);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.35),0 0 0 1px rgba(227,194,91,.25);padding:4px}
+#rcPop .rc-card{margin:0;border:0;background:transparent;box-shadow:none}
+@media (prefers-reduced-motion:no-preference){#rcPop{animation:rcIn .16s ease-out}@keyframes rcIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}}`;
 let modo='entrar';
 function ecra(msg,okMsg){let el=$('#rafcLogin');if(!el){const st=document.createElement('style');st.textContent=CSS;document.head.appendChild(st);el=document.createElement('div');el.id='rafcLogin';document.body.appendChild(el)}
   const cr=modo==='criar',rp=modo==='repor';
@@ -86,6 +102,28 @@ function verificar(u){let el=$('#rafcLogin');if(!el){ecra();el=$('#rafcLogin')}
   el.querySelector('[data-r]').onclick=async()=>{try{await u.sendEmailVerification();el.querySelector('.ms').textContent='Email reenviado.'}catch(e){el.querySelector('.ms').textContent=erro(e)}};
   el.querySelector('[data-s]').onclick=()=>auth.signOut()}
 
+/* ---- conta: cartão no menu lateral e menu no avatar ---- */
+function contaInfo(){const nm=(U.displayName||'').trim()||mail().split('@')[0],ini=nm.split(/\s+/).filter(Boolean).map(x=>x[0]).slice(0,2).join('').toUpperCase()||'?';
+  let rl='Utilizador';if(ADM)rl='Administrador';else{try{const defs=window.__perfisDef||{},pf=(window.__perfis||{})[U.uid];let lst=Array.isArray(pf)?pf:(pf?[pf]:null);
+    if(!lst){const pv=window.__perfisPrev||{};const k=Object.keys(pv).find(i=>String(pv[i].email||'').toLowerCase()===mail());if(k)lst=pv[k].perfil||[]}
+    const ns=(lst||[]).map(x=>(defs[String(x).split(':')[0]]||{}).n).filter(Boolean);if(ns.length)rl=ns.join(' · ')}catch(e){}}
+  return {nm,ini,rl}}
+const ICO_SAIR='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>';
+function cartao(el){const c=contaInfo();el.innerHTML='<div class="rc-top"><div class="rc-av" aria-hidden="true">'+esc(c.ini)+'</div><div class="rc-id"><span class="rc-nm">'+esc(c.nm)+'</span><span class="rc-rl">'+esc(c.rl)+'</span><span class="rc-em">'+esc(mail())+'</span></div></div><button type="button" class="rc-out">'+ICO_SAIR+'<span>Terminar sessão</span></button>';
+  el.querySelector('.rc-out').onclick=()=>{const b=el.querySelector('.rc-out');const cf=document.createElement('div');cf.className='rc-cf';cf.innerHTML='<p>Terminar a sessão neste dispositivo?</p><div class="rc-bt"><button type="button" class="rc-no">Cancelar</button><button type="button" class="rc-yes">Sair</button></div>';b.replaceWith(cf);cf.querySelector('.rc-yes').focus();
+    cf.querySelector('.rc-no').onclick=()=>cartao(el);cf.querySelector('.rc-yes').onclick=()=>auth.signOut()}}
+function contaUI(){const tryIt=()=>{const sd=document.getElementById('side');if(!sd)return false;
+    let c=document.getElementById('rcSide');if(!c){c=document.createElement('div');c.id='rcSide';c.className='rc-card';sd.appendChild(c)}cartao(c);
+    const av=document.getElementById('hAv');if(av&&!av.dataset.rc){av.dataset.rc='1';av.classList.add('rc-click');av.setAttribute('role','button');av.tabIndex=0;av.title='A sua conta';
+      const abrir=e=>{e.stopPropagation();let p=document.getElementById('rcPop');if(p){p.remove();return}p=document.createElement('div');p.id='rcPop';p.setAttribute('role','dialog');p.setAttribute('aria-label','A sua conta');const k=document.createElement('div');k.className='rc-card';p.appendChild(k);cartao(k);document.body.appendChild(p);
+        const r=av.getBoundingClientRect();p.style.top=(r.bottom+10)+'px';p.style.right=Math.max(16,innerWidth-r.right)+'px';
+        const fora=ev=>{if(!p.contains(ev.target)&&ev.target!==av){p.remove();document.removeEventListener('click',fora,true)}};setTimeout(()=>document.addEventListener('click',fora,true),0)};
+      av.addEventListener('click',abrir);av.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();abrir(e)}})}
+    return true};
+  if(!tryIt()){const iv=setInterval(()=>{if(tryIt())clearInterval(iv)},400)}
+  // o papel (perfil) só se conhece depois de os perfis carregarem
+  let n=0;const iv2=setInterval(()=>{const c=document.getElementById('rcSide'),r=c&&c.querySelector('.rc-rl');if(c&&r&&!c.querySelector('.rc-cf')&&r.textContent!==contaInfo().rl)cartao(c);if(++n>8)clearInterval(iv2)},1500)}
+
 let entrou=false;
 auth.onAuthStateChanged(async u=>{
   if(!u){if(entrou){location.reload();return}const go=()=>ecra();document.body?go():document.addEventListener('DOMContentLoaded',go);return}
@@ -94,10 +132,8 @@ auth.onAuthStateChanged(async u=>{
   U=u;entrou=true;
   ADM=DONOS.includes(mail());if(!ADM){try{ADM=(await fs.doc('admins/'+mail()).get()).exists}catch(e){ADM=false}}
   const l=$('#rafcLogin');if(l)l.remove();
-  const pSair=()=>{const sd=document.getElementById('side');if(!sd||document.getElementById('rafcSair'))return!!sd;const w=document.createElement('div');w.id='rafcSairBox';
-    w.innerHTML='<button type="button" id="rafcSair"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg><span>Sair da aplicação</span></button><div class="rafcEu">'+esc(mail())+'</div>';
-    sd.appendChild(w);w.querySelector('#rafcSair').onclick=()=>{if(w.dataset.c){auth.signOut();return}w.dataset.c='1';w.querySelector('span').textContent='Toque outra vez para sair';setTimeout(()=>{delete w.dataset.c;const sp=w.querySelector('span');if(sp)sp.textContent='Sair da aplicação'},4000)};return true};
-  if(!pSair()){const iv=setInterval(()=>{if(pSair())clearInterval(iv)},500)}
+  contaUI();
+
   pronto();
   const w=document.getElementById('welc');if(w)w.remove();setTimeout(()=>{window.__welT=undefined},500);
 });
