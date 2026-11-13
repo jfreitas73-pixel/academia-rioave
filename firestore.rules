@@ -25,7 +25,7 @@ service cloud.firestore {
     function temPerfil(p) { return meusPerfis().hasAny([p, p + ':ro', p + ':rw']); }
     function restrita(c) {
       return c in ['clinica','tecnicos','faturas','viaturaDesp','alojCustos','organograma','documentos','trials',
-                   'admins','convites','config','acessos','registo','boletins','aprovacoes','aprovadores','data'];
+                   'admins','convites','config','acessos','registo','boletins','aprovacoes','aprovadores','data','saidas'];
     }
 
     // Áreas gerais: quem tem perfil lê; quem tem algum perfil com edição escreve.
@@ -68,6 +68,16 @@ service cloud.firestore {
     match /aprovadores/{uid} {
       allow read: if membro();
       allow write: if admin() || (autent() && request.auth.uid == uid);
+    }
+    // Saídas da Residência: só o diretor autoriza ou recusa.
+    match /saidas/{id} {
+      allow read: if membro();
+      allow create: if admin() || (edita() && request.resource.data.estado == 'aguarda');
+      allow update: if admin() || (edita()
+        && request.resource.data.get('autPor', '') == resource.data.get('autPor', '')
+        && request.resource.data.get('recPor', '') == resource.data.get('recPor', '')
+        && !(resource.data.estado in ['aguarda', 'recusado'] && request.resource.data.estado in ['pedido', 'enviado', 'assinado', 'realizada']));
+      allow delete: if admin() || edita();
     }
     match /data/users/{uid}/{rest=**} {
       allow read, write: if autent() && request.auth.uid == uid;
