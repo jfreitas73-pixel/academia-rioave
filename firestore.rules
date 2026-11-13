@@ -1,0 +1,76 @@
+rules_version = '2';
+// Academia Rio Ave FC 360° — regras de acesso aos dados.
+// O diretor (DONO) é sempre administrador. Outros administradores: coleção «admins» (id = email).
+// Os perfis vêm de config/perfis (por conta) ou de convites/<email> (pré-registo).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function DONO() { return 'jfreitas73@gmail.com'; }
+    function autent() {
+      return request.auth != null && request.auth.token.email != null &&
+        (request.auth.token.email_verified == true || request.auth.token.firebase.sign_in_provider == 'google.com');
+    }
+    function mail() { return request.auth.token.email.lower(); }
+    function doc(p) { return /databases/$(database)/documents/$(p); }
+    function admin() { return autent() && (mail() == DONO() || exists(/databases/$(database)/documents/admins/$(mail()))); }
+    function perfisMap() {
+      return exists(/databases/$(database)/documents/config/perfis) ? get(/databases/$(database)/documents/config/perfis).data : {};
+    }
+    function convite() { return exists(/databases/$(database)/documents/convites/$(mail())); }
+    function meusPerfis() {
+      return request.auth.uid in perfisMap() ? perfisMap()[request.auth.uid]
+        : (convite() ? get(/databases/$(database)/documents/convites/$(mail())).data.perfil : []);
+    }
+    function membro() { return admin() || (autent() && meusPerfis().size() > 0); }
+    function edita() { return admin() || (autent() && meusPerfis().join(',').matches('(.*:rw.*)|(^[^:]*$)|(.*,[^:,]+(,.*)?$)')); }
+    function temPerfil(p) { return meusPerfis().hasAny([p, p + ':ro', p + ':rw']); }
+    function restrita(c) {
+      return c in ['clinica','tecnicos','faturas','viaturaDesp','alojCustos','organograma','documentos','trials',
+                   'admins','convites','config','acessos','registo','boletins','aprovacoes','aprovadores','data'];
+    }
+
+    // Áreas gerais: quem tem perfil lê; quem tem algum perfil com edição escreve.
+    match /{col}/{id} {
+      allow read: if !restrita(col) && membro();
+      allow write: if !restrita(col) && edita();
+    }
+    // Áreas reservadas à administração.
+    match /{col}/{id} {
+      allow read, write: if col in ['clinica','tecnicos','faturas','viaturaDesp','alojCustos','organograma','documentos','trials'] && admin();
+    }
+    match /boletins/{id} {
+      allow read: if admin() || (autent() && temPerfil('medico'));
+      allow write: if admin();
+    }
+    match /config/{id} {
+      allow read: if membro();
+      allow write: if admin();
+    }
+    match /admins/{email} {
+      allow read: if autent() && (email == mail() || admin());
+      allow write: if admin();
+    }
+    match /convites/{email} {
+      allow read: if autent() && (email == mail() || admin());
+      allow write: if admin();
+    }
+    match /acessos/{uid} {
+      allow read: if admin() || (autent() && request.auth.uid == uid);
+      allow write: if admin() || (autent() && request.auth.uid == uid);
+    }
+    match /registo/{id} {
+      allow read: if admin();
+      allow create: if membro();
+    }
+    match /aprovacoes/{id} {
+      allow read: if membro();
+      allow write: if edita();
+    }
+    match /aprovadores/{uid} {
+      allow read: if membro();
+      allow write: if admin() || (autent() && request.auth.uid == uid);
+    }
+    match /data/users/{uid}/{rest=**} {
+      allow read, write: if autent() && request.auth.uid == uid;
+    }
+  }
+}
