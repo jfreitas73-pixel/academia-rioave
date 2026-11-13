@@ -51,8 +51,10 @@ const CSS=`#rafcLogin{position:fixed;inset:0;z-index:100000;background:linear-gr
 #rafcLogin .ms{font-size:14px;min-height:1em;color:#9a3412}
 #rafcLogin .ok{color:#0b5a33}
 #rafcLogin .ou{display:flex;align-items:center;gap:10px;color:#8a978f;font-size:12px}#rafcLogin .ou:before,#rafcLogin .ou:after{content:"";flex:1;height:1px;background:#dde5e0}
-#rafcSair{position:fixed!important;left:auto!important;top:auto!important;right:12px!important;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:9000;font:600 12px system-ui;padding:7px 11px;border-radius:999px;border:1px solid rgba(0,0,0,.15);background:#fff;color:#14231b;box-shadow:0 4px 14px rgba(0,0,0,.15);cursor:pointer}
-@media(min-width:900px){#rafcSair{bottom:16px}}`;
+#rafcSairBox{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
+#rafcSair{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:transparent;color:#fca5a5;font:600 .95rem/1.2 inherit;font-family:inherit;padding:9px 12px;border-radius:10px;cursor:pointer}
+#rafcSair:hover{background:rgba(255,255,255,.08)}
+#rafcSairBox .rafcEu{font-size:11.5px;opacity:.55;padding:2px 12px 4px 40px;color:inherit;overflow-wrap:anywhere}`;
 let modo='entrar';
 function ecra(msg,okMsg){let el=$('#rafcLogin');if(!el){const st=document.createElement('style');st.textContent=CSS;document.head.appendChild(st);el=document.createElement('div');el.id='rafcLogin';document.body.appendChild(el)}
   const cr=modo==='criar',rp=modo==='repor';
@@ -92,7 +94,10 @@ auth.onAuthStateChanged(async u=>{
   U=u;entrou=true;
   ADM=DONOS.includes(mail());if(!ADM){try{ADM=(await fs.doc('admins/'+mail()).get()).exists}catch(e){ADM=false}}
   const l=$('#rafcLogin');if(l)l.remove();
-  if(!$('#rafcSair')){const b=document.createElement('button');b.id='rafcSair';b.textContent='Sair';b.title='Terminar sessão ('+mail()+')';b.onclick=()=>auth.signOut();document.body.appendChild(b)}
+  const pSair=()=>{const sd=document.getElementById('side');if(!sd||document.getElementById('rafcSair'))return!!sd;const w=document.createElement('div');w.id='rafcSairBox';
+    w.innerHTML='<button type="button" id="rafcSair"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg><span>Sair da aplicação</span></button><div class="rafcEu">'+esc(mail())+'</div>';
+    sd.appendChild(w);w.querySelector('#rafcSair').onclick=()=>{if(w.dataset.c){auth.signOut();return}w.dataset.c='1';w.querySelector('span').textContent='Toque outra vez para sair';setTimeout(()=>{delete w.dataset.c;const sp=w.querySelector('span');if(sp)sp.textContent='Sair da aplicação'},4000)};return true};
+  if(!pSair()){const iv=setInterval(()=>{if(pSair())clearInterval(iv)},500)}
   pronto();
   const w=document.getElementById('welc');if(w)w.remove();setTimeout(()=>{window.__welT=undefined},500);
 });
