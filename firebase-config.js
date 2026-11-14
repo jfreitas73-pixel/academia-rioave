@@ -7,3 +7,7 @@ window.RAFC_FIREBASE_CONFIG = {
   messagingSenderId: "845154358905",
   appId: "1:845154358905:web:af7b5505f1c83c402aa6a8"
 };
+
+/* Fora do GitHub Pages (Vercel ou domínio próprio), o login da Google passa pelo próprio endereço do site
+   (a Vercel encaminha /__/auth para o Firebase), o que funciona em qualquer browser. */
+(function(){var h=location.hostname;if(!/github\.io$|^localhost$|^127\./.test(h))window.RAFC_FIREBASE_CONFIG.authDomain=location.host;})();
